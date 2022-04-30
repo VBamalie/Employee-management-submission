@@ -1,8 +1,9 @@
 const connection = require ("./db/connection");
-const prompt = require("inquirer")
+const inquirer = require("inquirer")
 
 function mainMenu(){
-    prompt([
+    inquirer
+    .prompt([
         {
             type: "list",
             name: "choice",
@@ -10,6 +11,7 @@ function mainMenu(){
             choices: [
                 {
                     name: "View All Employees",
+                    // value: "VIEW_EMPLOYEES"
                     value: "VIEW_EMPLOYEES"
                 },
                 {
@@ -35,9 +37,51 @@ function mainMenu(){
             ]
         }
     ])
-    .then(res =>{
-        let choices = res.choices;
+    .then((res) =>{
+        let choices = res.choice
         //now we call the appropriate function depending on what the user chooses
+        console.log(choices)
+        if(choices == "VIEW_EMPLOYEES"){
+            console.log("These are our employees:")
+            viewEmployees();
+        }
+        if(choices == "VIEW_DEPARTMENTS"){
+            console.log("These are our departments:")
+        }
+        if(choices == "VIEW_ROLES"){
+            console.log("These are our departments:")
+        }
+        if(choices == "ADD_EMPLOYEE"){
+            console.log("Add employee")
+        }
+        if(choices =="ADD_DEPARTMENT"){
+            console.log("Add employee")
+        }
+        if(choices == "QUIT"){
+            quit()
+        }
+
+        // switch(choices){
+        //     case "VIEW_EMPLOYEES":
+        //         console.log("These are our employees:")
+        //         viewEmployees()
+        //         break;
+        //     case "VIEW_DEPARTMENTS":
+        //         console.log("These are our departments:")
+        //         break;
+        //     case "VIEW_ROLES":
+        //         console.log("These are our roles:")
+        //         break;
+        //     case "ADD_EMPLOYEE":
+        //         console.log("Add employee")
+        //         break;
+        //     case "ADD_DEPARTMENT":
+        //         console.log("Add employee")
+        //         break;
+        //     case "QUIT":
+        //         quit()
+        //         break
+        // }
     })
 }
 
@@ -49,16 +93,15 @@ function mainMenu(){
 // }
 
 function viewEmployees(){
-    connection.findAllEmployees()
-    .then(([rows])=>{
-        let employees = rows;
-        console.log("\n");
-        console.table(employees)
+    connection.query("SELECT first_name, last_name FROM employee", async function(err , rows){
+        console.table(rows)
+        await mainMenu();
     })
-    .then(()=> mainMenu())
 }
 
 function quit(){
     console.log("Goodbye!");
     process.exit()
 }
+
+mainMenu()

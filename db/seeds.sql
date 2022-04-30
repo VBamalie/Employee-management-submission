@@ -11,12 +11,12 @@ VALUES
 INSERT INTO role
     (title, salary, department_id)
 VALUES
-    ("Operations Manger", 200000, 1),
+    ("Operations Manager", 200000, 1),
     ("HR Business Partner", 190000, 2),
     ("Senior Developer", 100000, 3),
     ("Junior Developer", 75000, 3),
     ("Data Clerk", 55000, 4),
-    ("Secretary", 42000, 4)
+    ("Secretary", 42000, 4);
 
 INSERT INTO employee
     (first_name, last_name, role_id)
@@ -26,4 +26,4 @@ VALUES
     ("Richard", "Grayson", 3),
     ("Barbara", "Gordon", 4),
     ("Timothy", "Drake", 5),
-    ("Jason", "Todd", 6)
+    ("Jason", "Todd", 6);
