@@ -8,9 +8,10 @@ VALUES
     ("Engineering"),
     ("Operations");
 
-INSERT INTO role
+INSERT INTO roles
     (title, salary, department_id)
 VALUES
+    ("CEO", 1100000, 1),
     ("Operations Manager", 200000, 1),
     ("HR Business Partner", 190000, 2),
     ("Senior Developer", 100000, 3),
@@ -19,11 +20,12 @@ VALUES
     ("Secretary", 42000, 4);
 
 INSERT INTO employee
-    (first_name, last_name, role_id)
+    (first_name, last_name, role_id, manager_name)
 VALUES
-    ("Bruce", "Warne", 1),
-    ("Lucius", "Fox", 2),
-    ("Richard", "Grayson", 3),
-    ("Barbara", "Gordon", 4),
-    ("Timothy", "Drake", 5),
-    ("Jason", "Todd", 6);
+    ("Bruce", "Wayne", 1, "None"),
+    ("Lucius", "Fox", 2, "Bruce Wayne"),
+    ("Richard", "Grayson", 3, "Bruce Wayne"),
+    ("Barbara", "Gordon", 4, "Lucius Fox"),
+    ("Timothy", "Drake", 5, "Barbara Gordon"),
+    ("Selina", "Kyle", 6, "Lucius Fox"),
+    ("Jason", "Todd", 7, "Lucius Fox");

@@ -8,11 +8,11 @@ CREATE TABLE department (
     name VARCHAR(250) UNIQUE NOT NULL
 );
 
-CREATE TABLE role (
+CREATE TABLE roles (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(250) UNIQUE NOT NULL,
     salary DECIMAL UNSIGNED NOT NULL,
-    department_id INT UNSIGNED NOT NULL;
+    department_id INT UNSIGNED NOT NULL,
     FOREIGN KEY(department_id)
     REFERENCES department(id)
 );
@@ -21,7 +21,8 @@ CREATE TABLE employee (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(250) UNIQUE NOT NULL,
     last_name VARCHAR(250) UNIQUE NOT NULL,
-    role_id INT UNSIGNED NOT NULL;
+    manager_name VARCHAR(250) NOT NULL,
+    role_id INT UNSIGNED NOT NULL,
     FOREIGN KEY(role_id)
-    REFERENCES role(id)
+    REFERENCES roles(id)
 );
