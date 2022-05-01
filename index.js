@@ -1,5 +1,7 @@
 const connection = require ("./helpers/connection");
-const inquirer = require("inquirer")
+const inquirer = require("inquirer");
+const {viewEmployees, viewDepartments, viewRoles, addDepartment, quit} = require("./helpers/modules")
+
 function mainMenu(){
     inquirer
     .prompt([
@@ -10,11 +12,10 @@ function mainMenu(){
             choices: [
                 {
                     name: "View All Employees",
-                    // value: "VIEW_EMPLOYEES"
                     value: "VIEW_EMPLOYEES"
                 },
                 {
-                    name: "View Dapartments",
+                    name: "View Departments",
                     value: "VIEW_DEPARTMENTS"
                 },
                 {
@@ -30,6 +31,10 @@ function mainMenu(){
                     value: "ADD_DEPARTMENT"
                 },
                 {
+                    name: "Add Role",
+                    value: "ADD_ROLE"
+                },
+                {
                     name: "Quit",
                     value: "QUIT"
                 }
@@ -38,29 +43,7 @@ function mainMenu(){
     ])
     .then((res) =>{
         let choices = res.choice
-        //now we call the appropriate function depending on what the user chooses
-        // if(choices == "VIEW_EMPLOYEES"){
-        //     console.log("These are our employees:")
-        //     viewEmployees();
-        // }
-        // if(choices == "VIEW_DEPARTMENTS"){
-        //     console.log("These are our departments:")
-        //     viewDepartments();
-        // }
-        // if(choices == "VIEW_ROLES"){
-        //     console.log("These are our Roles:")
-        //     viewRoles();
-        // }
-        // if(choices == "ADD_EMPLOYEE"){
-        //     console.log("Add employee")
-        // }
-        // if(choices =="ADD_DEPARTMENT"){
-        //     console.log("Add employee")
-        // }
-        // if(choices == "QUIT"){
-        //     quit()
-        // }
-
+       
         switch(choices){
             case "VIEW_EMPLOYEES":
                 console.log("These are our employees:")
@@ -78,7 +61,10 @@ function mainMenu(){
                 console.log("Add employee")
                 break;
             case "ADD_DEPARTMENT":
-                console.log("Add employee")
+                addDepartment()
+                break;
+            case "ADD_ROLE":
+                addRole()
                 break;
             case "QUIT":
                 quit()
@@ -87,40 +73,85 @@ function mainMenu(){
     })
 }
 
-//conditional statement here- call correspoding function
 
-// async function viewEmployees(){
-//     let employees= awai debugger.findAllEmployees();
-//     console.table(employees)
+// function viewEmployees(){
+//     connection.query(
+//         `SELECT employee.id, employee.first_name, employee.last_name, employee.manager_name, roles.title, roles.salary, department.name
+//         FROM department
+//         JOIN roles ON roles.department_id  = department.id
+//         JOIN employee ON employee.role_id = roles.id;`, async function(err , rows){
+//             console.table(rows)
+//             await mainMenu();
+//             })
 // }
 
-function viewEmployees(){
-    connection.query(
-        `SELECT employee.id, employee.first_name, employee.last_name, employee.manager_name, roles.title, roles.salary, department.name
-        FROM department
-        JOIN roles ON roles.department_id  = department.id
-        JOIN employee ON employee.role_id = roles.id;`, async function(err , rows){
-            console.table(rows)
-            await mainMenu();
-            })
-}
+// function viewDepartments(){
+//     connection.query(
+//         `SELECT * FROM department`, async function (err, rows){
+//             console.log(rows)
+//             await mainMenu();
+//         }
+//     )
+// }
 
-function viewDepartments(){
-    connection.query(
-        `SELECT * FROM department`, async function (err, rows){
-            console.table(rows)
-            await mainMenu();
-        }
-    )
-}
-function viewRoles(){
-    connection.query(
-    `SELECT roles.title, roles.id, roles.salary, department.name FROM department JOIN roles ON roles.department_id  = department.id;`, async function(err, rows){
-        console.table(rows)
-        await mainMenu();
-        }
-    )
-}
+// function viewRoles(){
+//     connection.query(
+//     `SELECT roles.title, roles.id, roles.salary, department.name FROM department JOIN roles ON roles.department_id  = department.id;`, async function(err, rows){
+//         console.table(rows)
+//         await mainMenu();
+//         }
+//     )
+// }
+
+// function addDepartment(){
+//     inquirer
+//         .prompt([
+//             {
+//                 type: "input",
+//                 message: "What's the new department's name?",
+//                 name: "DepartmentName"
+//             }
+//         ])
+//         .then((res)=>{
+//             let newName = res.DepartmentName
+//             connection.query(
+//             `INSERT INTO department (name) VALUES ("${newName}");`, async function (){
+//                 console.log("Successfully added!")
+//                 mainMenu();
+//             })
+//         })
+// }
+
+function addRole(){
+    // depTable = connection.query(
+    //     `SELECT * FROM department`, function (err, rows){ return rows
+    // });
+    // console.log(depTable)
+    // // depOptions = depTable.forEach(element => {element.value = `${element.id}`
+    // });
+    console.log(depOptions)
+    inquirer
+        .prompt([
+            {
+                 name: "title",
+                 message: "What's the new role's title?",
+                 type: "input"
+             },
+             {
+                 name: "salary",
+                 message: "How much does this role make?",
+                 type: "input"
+             },
+            {
+                 name: "deparment_id",
+                 message: "What department does this belong to?",
+                 type: "list",
+                 choices: {...departmentOptions}
+             }
+         ])
+    }
+
+
 
 
 function quit(){
@@ -129,3 +160,4 @@ function quit(){
 }
 
 mainMenu()
+module.exports = {mainMenu}
