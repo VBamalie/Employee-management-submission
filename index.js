@@ -1,6 +1,9 @@
 const connection = require ("./helpers/connection");
 const inquirer = require("inquirer");
-const {viewEmployees, viewDepartments, viewRoles, addDepartment, quit} = require("./helpers/modules")
+const res = require("express/lib/response");
+
+// const {viewEmployees, viewDepartments, viewRoles, addDepartment } = require("./helpers/modules")
+const grabDepartments = new Promise((resolve, reject)=>{connection.query(`SELECT * FROM employees.department`, (err, res)=> { resolve(res)})})
 
 function mainMenu(){
     inquirer
@@ -74,82 +77,89 @@ function mainMenu(){
 }
 
 
-// function viewEmployees(){
-//     connection.query(
-//         `SELECT employee.id, employee.first_name, employee.last_name, employee.manager_name, roles.title, roles.salary, department.name
-//         FROM department
-//         JOIN roles ON roles.department_id  = department.id
-//         JOIN employee ON employee.role_id = roles.id;`, async function(err , rows){
-//             console.table(rows)
-//             await mainMenu();
-//             })
-// }
+function viewEmployees(){
+    connection.query(
+        `SELECT employee.id, employee.first_name, employee.last_name, employee.manager_name, roles.title, roles.salary, department.name
+        FROM department
+        JOIN roles ON roles.department_id  = department.id
+        JOIN employee ON employee.role_id = roles.id;`, async function(err , rows){
+            console.table(rows)
+            await mainMenu();
+            })
+}
 
-// function viewDepartments(){
-//     connection.query(
-//         `SELECT * FROM department`, async function (err, rows){
-//             console.log(rows)
-//             await mainMenu();
-//         }
-//     )
-// }
+function viewDepartments(){
+    connection.query(
+        `SELECT * FROM department`, async function (err, rows){
+            console.table(rows)
+            await mainMenu();
+        }
+    )
+}
 
-// function viewRoles(){
-//     connection.query(
-//     `SELECT roles.title, roles.id, roles.salary, department.name FROM department JOIN roles ON roles.department_id  = department.id;`, async function(err, rows){
-//         console.table(rows)
-//         await mainMenu();
-//         }
-//     )
-// }
 
-// function addDepartment(){
-//     inquirer
-//         .prompt([
-//             {
-//                 type: "input",
-//                 message: "What's the new department's name?",
-//                 name: "DepartmentName"
-//             }
-//         ])
-//         .then((res)=>{
-//             let newName = res.DepartmentName
-//             connection.query(
-//             `INSERT INTO department (name) VALUES ("${newName}");`, async function (){
-//                 console.log("Successfully added!")
-//                 mainMenu();
-//             })
-//         })
-// }
+function viewRoles(){
+    connection.query(
+    `SELECT roles.title, roles.id, roles.salary, department.name FROM department JOIN roles ON roles.department_id  = department.id;`, async function(err, rows){
+        console.table(rows)
+        await mainMenu();
+        }
+    )
+}
 
-function addRole(){
-    // depTable = connection.query(
-    //     `SELECT * FROM department`, function (err, rows){ return rows
-    // });
-    // console.log(depTable)
-    // // depOptions = depTable.forEach(element => {element.value = `${element.id}`
-    // });
-    console.log(depOptions)
+function addDepartment(){
     inquirer
         .prompt([
             {
-                 name: "title",
-                 message: "What's the new role's title?",
-                 type: "input"
-             },
-             {
-                 name: "salary",
-                 message: "How much does this role make?",
-                 type: "input"
-             },
+                type: "input",
+                message: "What's the new department's name?",
+                name: "DepartmentName"
+            }
+        ])
+        .then((res)=>{
+            let newName = res.DepartmentName
+            connection.query(
+            `INSERT INTO department (name) VALUES ("${newName}");`, function (){
+                console.log("Successfully added!")
+                mainMenu();
+            })
+        })
+}
+
+function addRole(){
+    grabDepartments.then((value)=>{
+        inquirer.prompt([
             {
-                 name: "deparment_id",
-                 message: "What department does this belong to?",
-                 type: "list",
-                 choices: {...departmentOptions}
-             }
-         ])
-    }
+                name: "title",
+                message: "What's the new role's title?",
+                type: "input"
+            },
+            {
+                name: "salary",
+                message: "How much does this role make?",
+                type: "input"
+            },
+            {
+                name: "deparment_id",
+                message: "What department does this belong to?",
+                type: "list",
+                choices: value.map((x)=>{
+                    return{
+                        name: x.name,
+                        value: x.id,
+
+                    }
+                })
+            }
+        ])
+        .then((res)=>{ console.log(res);
+           let{title, salary, dep} = res
+           console.log(dep)
+            // connection.query(`INSERT INTO employees.roles (title, salary, department_id) VALUES(?,?,?);`, [res.title, res.salary, res.dempartment_id])
+        })
+    })
+}
+
 
 
 
@@ -160,4 +170,3 @@ function quit(){
 }
 
 mainMenu()
-module.exports = {mainMenu}

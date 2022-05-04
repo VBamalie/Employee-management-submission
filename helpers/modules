@@ -15,7 +15,7 @@ function viewDepartments(){
     connection.query(
         `SELECT * FROM department`, async function (err, rows){
             console.log(rows)
-            await mainMenu();
+            // await mainMenu();
         }
     )
 }
@@ -24,7 +24,7 @@ function viewRoles(){
     connection.query(
     `SELECT roles.title, roles.id, roles.salary, department.name FROM department JOIN roles ON roles.department_id  = department.id;`, async function(err, rows){
         console.table(rows)
-        await mainMenu();
+        // await mainMenu();
         }
     )
 }
@@ -43,14 +43,14 @@ function addDepartment(){
             connection.query(
             `INSERT INTO department (name) VALUES ("${newName}");`, async function (){
                 console.log("Successfully added!")
-                mainMenu();
+                // mainMenu();
             })
         })
 }
 
-function quit(){
-    console.log("Goodbye!");
-    process.exit()
-}
+// function quit(){
+//     console.log("Goodbye!");
+//     process.exit()
+// }
 
 module.exports = {viewEmployees, viewDepartments, viewRoles, addDepartment}
